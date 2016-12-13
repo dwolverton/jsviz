@@ -12,38 +12,45 @@ app.directive("jsviz", function() {
     }
 });
 app.directive("jsvizValue", function() {
+    function type(value, depth) {
+        if (depth > 8) {
+            return 'depth-exceeded';
+        }
+        var type = typeof value;
+        if (type === 'string' || type === 'number' || type === 'boolean' || type === 'function') {
+            return type;
+        } else if (!value) {
+            return 'null';
+        } else if (Array.isArray(value)) {
+            return 'array';
+        } else if (type === 'object') {
+            return 'object';
+        } else {
+            return 'null';
+        }
+    }
+    function empty(value) {
+        if (Array.isArray(value)) {
+            return value.length === 0;
+        } else if (typeof value === 'object') {
+            return Object.keys(value).length === 0;
+        } else {
+            return false;
+        }
+    }
+    function increment(val) {
+        return val ? Number(val) + 1 : 1;
+    }
+
     return {
         scope: {
             value: "=",
             depth: "@"
         },
-        link: function(scope, element, attrs) {
-            scope.type = function(value, depth) {
-                if (depth && depth.length > 8) {
-                    return 'depth-exceeded';
-                }
-                var type = typeof value;
-                if (type === 'string' || type === 'number' || type === 'boolean' || type === 'function') {
-                    return type;
-                } else if (!value) {
-                    return 'null';
-                } else if (Array.isArray(value)) {
-                    return 'array';
-                } else if (type === 'object') {
-                    return 'object';
-                } else {
-                    return 'null';
-                }
-            };
-            scope.empty = function(value) {
-                if (Array.isArray(value)) {
-                    return value.length === 0;
-                } else if (typeof value === 'object') {
-                    return Object.keys(value).length === 0;
-                } else {
-                    return false;
-                }
-            };
+        controller: function($scope) {
+            $scope.type = type;
+            $scope.empty = empty;
+            $scope.increment = increment;
         },
         replace: true,
         template: '<div class="value"><jsviz-string ng-if="type(value, depth) === \'string\'"/>' +
@@ -81,7 +88,7 @@ app.directive("jsvizArray", function() {
             '<span class="empty" ng-if="empty(value)">&lt;Empty Array&gt;</span>' +
             '<div class="element" ng-repeat="el in value track by $index">' +
                 '<div class="index" title="Array Index: {{$index}}">{{$index}}</div> ' +
-                '<jsviz-value value="el" depth="{{depth + \'*\'}}"/>' +
+                '<jsviz-value value="el" depth="{{increment(depth)}}"/>' +
             '</div></div>'
     };
 });
@@ -92,7 +99,7 @@ app.directive("jsvizObject", function() {
             '<span class="empty" ng-if="empty(value)">&lt;Empty Object&gt;</span>' +
             '<div class="key-value" ng-repeat="(key,val) in value track by $index">' +
                 '<div class="key" title="Property Name (aka: key)">{{key}}</div> ' +
-                '<jsviz-value value="val" depth="{{depth + \'*\'}}"/>' +
+                '<jsviz-value value="val" depth="{{increment(depth)}}"/>' +
             '</div></div>'
     };
 });
@@ -106,7 +113,7 @@ app.directive("jsvizFunction", function() {
 app.service("jsvizSync", function() {
     /**
      * A function that syncs properties and values from a source object to a
-     * target object. Optionally a third parameter specified an array of
+     * target object. Optionally a third parameter specifies an array of
      * properties that may be on the source but should not be on the target
      */
     var sync = this.sync = function(source, target, blacklist) {
@@ -128,10 +135,23 @@ app.service("jsvizSync", function() {
     }
 
     /**
-     * Build and return a function that will sync all properties from the source
-     * object to the target option. A blacklist will be used that includes all
-     * the properties that are on the source when this builder function is
-     * called.
+     * A function that removes all properties from abject. Optionally a second
+     * parameter specifies an array of properties that should not be removed.
+     */
+    var clear = this.clear = function(object, blacklist) {
+        blacklist = blacklist || [];
+        for (var prop in object) {
+            if (blacklist.indexOf(prop) === -1) {
+                delete object[prop];
+            }
+        }
+    }
+
+    /**
+     * Return an object that can sync all properties from the source object to
+     * the target option and clear all properties on both objects. A blacklist
+     * will be used that includes all the properties that are on the source
+     * when this builder function is called.
      */
     this.buildSyncFunction = function(source, target) {
         // Initial list of properties of source object. These will be ignored.
@@ -140,10 +160,15 @@ app.service("jsvizSync", function() {
             blacklist.push(prop);
         }
 
-        return function() {
-            sync(source, target, blacklist);
+        return {
+            sync: function() {
+                sync(source, target, blacklist);
+            },
+            clear: function() {
+                clear(source, blacklist);
+                clear(target, blacklist);
+            }
         }
     }
-    console.log(this);
 });
 }());
