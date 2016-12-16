@@ -28,6 +28,9 @@ app.controller("main", function($scope, $interval, jsvizSync, $rootScope, practi
     }
 
     function isSolved() {
+        if (_.isEmpty($scope.goalVariables)) {
+            return false;
+        }
         var solved = true;
         _.forOwn($scope.goalVariables, function(value, key) {
             if (!_.isEqual(value, $scope.variables[key])) {

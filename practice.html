@@ -39,7 +39,7 @@
     </style>
 </head>
 <body ng-app="jsVizPractice" ng-controller="main">
-    <label ng-repeat="set in sets">
+    <label ng-repeat="set in sets" ng-cloak>
         <input type="checkbox" ng-model="set.included"/> {{set.id}}
     </label>
     <section class="workspace">
