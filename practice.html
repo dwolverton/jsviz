@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+<head>
+    <title>Practice Data Structures</title>
+    <link rel="stylesheet" href="styles.css"/>
+    <style>
+        .workspace {
+            float: left;
+            width: 50%;
+        }
+        .goal {
+            float: right;
+            width: 50%;
+        }
+        .message {
+            position: fixed;
+            top: 2em;
+            left: 50%;
+            margin: 0;
+            margin-left: -8em;
+            width: 16em;
+            background-color: rgba(128,128,128,.8);
+            font-size: 200%;
+            padding: 1em;
+            text-align: center;
+            box-shadow: 4px 4px 4px rgb(64,64,64);
+        }
+        .message button {
+            background-color: white;
+            border-radius: 4px;
+            font-size: 80%;
+            box-shadow: 1px 1px 4px black;
+            padding: .2em .5em;
+            border: none;
+        }
+    </style>
+</head>
+<body ng-app="jsVizPractice" ng-controller="main">
+    <label ng-repeat="set in sets">
+        <input type="checkbox" ng-model="set.included"/> {{set.id}}
+    </label>
+    <section class="workspace">
+        <h2>Workspace</h2>
+        <jsviz variables="variables"/>
+    </section>
+    <section class="goal">
+        <h2>Goal</h2>
+        <jsviz variables="goalVariables"/>
+    </section>
+    <div class="message" ng-if="isSolved()">
+        You got it!
+        <button class="action" ng-click="next()">Next Challenge</button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.9/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.2/lodash.min.js"></script>
+    <script src="jsviz.js"></script>
+    <script src="practice.js"></script>
+</body>
+</html>

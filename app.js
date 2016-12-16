@@ -5,6 +5,4 @@ app.controller("main", function($scope, $interval, jsvizSync) {
     var syncer = jsvizSync.buildSyncFunction(window, $scope.variables);
     $interval(syncer.sync, 300);
 });
-
-
 }());
