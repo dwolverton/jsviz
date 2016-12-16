@@ -4,14 +4,14 @@ app.controller("main", function($scope, $interval, jsvizSync, $rootScope, practi
     $scope.variables = {};
     $scope.isSolved = isSolved;
     window.next = $scope.next = nextProblem;
-    
+
     var syncer = jsvizSync.buildSyncFunction(window, $scope.variables);
     $interval(syncer.sync, 300);
 
     var fullSet = [];
     $rootScope.$on("$locationChangeSuccess", function() {
         practiceSetLoader().then(function(allProblems) {
-            fullSet = allProblems;
+            fullSet = _.shuffle(allProblems);
             nextProblem();
         });
     });
