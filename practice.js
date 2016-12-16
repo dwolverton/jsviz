@@ -1,28 +1,20 @@
 (function(){
 var app = angular.module("jsVizPractice", ["jsViz"]);
-app.controller("main", function($scope, $interval, jsvizSync, $rootScope, practiceSetLoader) {
+app.controller("main", function($scope, $interval, $rootScope, $location, jsvizSync, problemSetService) {
     $scope.variables = {};
     $scope.isSolved = isSolved;
-    window.next = $scope.next = nextProblem;
+    $scope.next = window.next = nextProblem;
 
     var syncer = jsvizSync.buildSyncFunction(window, $scope.variables);
     $interval(syncer.sync, 300);
 
-    var fullSet = [];
     $rootScope.$on("$locationChangeSuccess", function() {
-        practiceSetLoader().then(function(allProblems) {
-            fullSet = _.shuffle(allProblems);
-            nextProblem();
-        });
+        var setIds = _.filter($location.path().split(/[\/,]/));
+        problemSetService.loadDataSets(setIds).then(nextProblem);
     });
 
-    var currentProblemIndex = Infinity;
     function nextProblem() {
-        if (currentProblemIndex >= fullSet.length) {
-            currentProblemIndex = 0;
-            _.shuffle(fullSet);
-        }
-        var next = fullSet[currentProblemIndex++];
+        var next = problemSetService.getNextProblem();
         syncer.clear();
         $scope.goalVariables = next;
     }
@@ -42,22 +34,42 @@ app.controller("main", function($scope, $interval, jsvizSync, $rootScope, practi
     }
 });
 
-app.factory("practiceSetLoader", function($location, $http) {
-    return function() {
-        var setIds = _.filter($location.path().split(/[\/,]/));
+app.factory("problemSetService", function($location, $http) {
+    var fullSet = [];
+    var currentProblemIndex = Infinity;
+    var availableSets = {};
+
+    function loadDataSets(setIds) {
         return $http.get("practice.json").then(function(response) {
+            var includeAllSets = !setIds || _.isEmpty(setIds);
             var sets = response.data;
             var practiceProblems = [];
-            var availableSets = {};
+            availableSets = {};
             _.forOwn(sets, function(set, setId) {
-                var included = _.includes(setIds, setId);
+                var included = includeAllSets || _.includes(setIds, setId);
                 availableSets[setId] = included;
                 if (included) {
                     practiceProblems = practiceProblems.concat(set);
                 }
             });
             return practiceProblems;
+        }).then(function(practiceProblems) {
+            fullSet = practiceProblems;
+            currentProblemIndex = Infinity;
         });
+    }
+
+    function getNextProblem() {
+        if (currentProblemIndex >= fullSet.length) {
+            currentProblemIndex = 0;
+            fullSet = _.shuffle(fullSet);
+        }
+        return fullSet[currentProblemIndex++];
+    }
+
+    return {
+        loadDataSets: loadDataSets,
+        getNextProblem: getNextProblem
     }
 });
 
