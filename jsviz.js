@@ -1,5 +1,6 @@
 (function(){
 var app = angular.module("jsViz", []);
+var DELETED = { deleted: "DELETED" };
 app.directive("jsviz", function() {
     return {
         scope: {
@@ -121,14 +122,14 @@ app.service("jsvizSync", function() {
         var sourceProps = [];
         // copy props from source to target
         for (var prop in source) {
-            if (blacklist.indexOf(prop) === -1) {
+            if (blacklist.indexOf(prop) === -1 && source[prop] !== DELETED) {
                 sourceProps.push(prop);
                 target[prop] = source[prop];
             }
         }
         // remove and extra properties from target
         for (var prop in target) {
-            if (sourceProps.indexOf(prop) === -1) {
+            if (sourceProps.indexOf(prop) === -1 || source[prop] === DELETED) {
                 delete target[prop];
             }
         }
@@ -142,7 +143,9 @@ app.service("jsvizSync", function() {
         blacklist = blacklist || [];
         for (var prop in object) {
             if (blacklist.indexOf(prop) === -1) {
-                delete object[prop];
+                if (!(delete object[prop])) {
+                    object[prop] = DELETED;
+                }
             }
         }
     }

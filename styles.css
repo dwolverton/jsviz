@@ -70,6 +70,8 @@ html {
 .index {
     display: inline-block;
     vertical-align: top;
+    font-size: 75%;
+    font-style: italic;
 }
 .value {
     display: inline-block;
