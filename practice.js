@@ -3,7 +3,11 @@ var app = angular.module("jsVizPractice", ["jsViz"]);
 app.controller("main", function($scope, $interval, $rootScope, $location, jsvizSync, problemSetService) {
     $scope.variables = {};
     $scope.isSolved = isSolved;
+    $scope.showInstructions = true;
     $scope.next = window.next = nextProblem;
+    $scope.toggleInstructions = function() {
+        $scope.showInstructions = !$scope.showInstructions;
+    }
 
     var syncer = jsvizSync.buildSyncFunction(window, $scope.variables);
     $interval(syncer.sync, 300);
