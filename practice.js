@@ -8,6 +8,11 @@ app.controller("main", function($scope, $interval, $rootScope, $location, jsvizS
     $scope.toggleInstructions = function() {
         $scope.showInstructions = !$scope.showInstructions;
     }
+    window.goal = function() {
+        _.forOwn($scope.goalVariables, function(value, key) {
+            console.log(key + " =", value);
+        });
+    }
 
     var syncer = jsvizSync.buildSyncFunction(window, $scope.variables);
     $interval(syncer.sync, 300);
