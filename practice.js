@@ -1,12 +1,14 @@
 (function(){
 var app = angular.module("jsVizPractice", ["jsViz"]);
-app.controller("main", function($scope, $interval, $rootScope, $location, jsvizSync, problemSetService) {
+app.controller("main", function($scope, $interval, $rootScope, jsvizSync, problemSetService, configService) {
+    window.cs = configService;
     $scope.variables = {};
     $scope.isSolved = isSolved;
-    $scope.showInstructions = true;
+    $scope.showInstructions = orDefault(localStorage.jvizShowInstructions, "true") === "true";
     $scope.next = window.next = nextProblem;
     $scope.toggleInstructions = function() {
         $scope.showInstructions = !$scope.showInstructions;
+        localStorage.jvizShowInstructions = $scope.showInstructions;
     }
     window.goal = function() {
         _.forOwn($scope.goalVariables, function(value, key) {
@@ -18,8 +20,10 @@ app.controller("main", function($scope, $interval, $rootScope, $location, jsvizS
     $interval(syncer.sync, 300);
 
     $rootScope.$on("$locationChangeSuccess", function() {
-        var setIds = _.filter($location.path().split(/[\/,]/));
-        problemSetService.loadDataSets(setIds).then(nextProblem);
+        configService.loadFromUrl();
+        problemSetService
+            .loadDataSets(configService.get('sourceUrl'), configService.get('setIds'))
+            .then(nextProblem);
     });
 
     function nextProblem() {
@@ -43,15 +47,18 @@ app.controller("main", function($scope, $interval, $rootScope, $location, jsvizS
     }
 });
 
-app.factory("problemSetService", function($location, $http) {
+app.factory("problemSetService", function($http) {
     var fullSet = [];
     var currentProblemIndex = Infinity;
     var availableSets = {};
+    var randomOrder = false;
 
-    function loadDataSets(setIds) {
-        return $http.get("practice.json").then(function(response) {
+    function loadDataSets(sourceUrl, setIds) {
+        return $http.get(sourceUrl).then(function(response) {
             var includeAllSets = !setIds || _.isEmpty(setIds);
-            var sets = response.data;
+            var sets = response.data.problemSets;
+            randomOrder = orDefault(response.data.randomOrder, false);
+
             var practiceProblems = [];
             availableSets = {};
             _.forOwn(sets, function(set, setId) {
@@ -71,7 +78,9 @@ app.factory("problemSetService", function($location, $http) {
     function getNextProblem() {
         if (currentProblemIndex >= fullSet.length) {
             currentProblemIndex = 0;
-            fullSet = _.shuffle(fullSet);
+            if (randomOrder) {
+                fullSet = _.shuffle(fullSet);
+            }
         }
         return fullSet[currentProblemIndex++];
     }
@@ -81,5 +90,43 @@ app.factory("problemSetService", function($location, $http) {
         getNextProblem: getNextProblem
     }
 });
+
+app.factory("configService", function($location) {
+
+    var config = {};
+
+    function loadFromUrl() {
+        set("setIds", parseArray($location.search().setIds), []);
+        set("sourceUrl", $location.search().sourceUrl, "practice.json");
+    }
+
+    function set(option, value, defaultValue) {
+        value = orDefault(value, defaultValue);
+        config[option] = value;
+    }
+
+    function parseArray(string) {
+        if (!string) {
+            return undefined;
+        }
+        return string.toString().split(/[\/,]/);
+    }
+
+    return {
+        loadFromUrl: loadFromUrl,
+        get: function(option) {
+            return config[option];
+        },
+        set: set
+    }
+});
+
+function orDefault(value, defaultValue) {
+    if (typeof value === "undefined") {
+        return defaultValue;
+    } else {
+        return value;
+    }
+}
 
 }());

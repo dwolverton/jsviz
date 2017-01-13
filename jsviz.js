@@ -162,6 +162,11 @@ app.service("jsvizSync", function() {
         for (var prop in source) {
             blacklist.push(prop);
         }
+        if (source === window) {
+            // Batarang Noise
+            blacklist.push("MODULE_NAME");
+            blacklist.push("SEVERITY_WARNING");
+        }
 
         return {
             sync: function() {
