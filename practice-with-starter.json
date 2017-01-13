@@ -1,0 +1,73 @@
+{
+    "randomOrder": true,
+    "problemSets": {
+        "variables": [
+            { "x": 7, "y": 2 },
+            { "color": "red" },
+            { "color": "brown", "scent": "earthy" },
+            { "height": 4.7 },
+            { "isNight": false, "isDay": true },
+            { "age": 92 }
+        ],
+        "arrays": [
+            { "numbers": [1, 2, 3],
+                "^": { "numbers": [0, 1, 2, 3] } },
+            { "letters": ["a", "b", "c"],
+                "^": { "letters": ["a", "b"] } },
+            { "weekend": [true, false, false, false, false, false, true],
+                "^": { "weekend": [false, false, false, false, false, false, false] } },
+            { "colors": ["red", "orange", "yellow", "green", "blue", "violet"],
+                "^": { "colors": ["orange", "lemon", "green"] } },
+            { "numbers": [2, 4, 6, 8],
+                "^": { "numbers": [1, 2, 3, 4] } }
+        ],
+        "objects": [
+            { "hotel": {
+                "rooms": 212,
+                "availableRooms": 90,
+                "hasPool": true,
+                "name": "JavaScript Hotel"
+            }},
+            { "cat": {
+                "legs": 4,
+                "tail": "curly",
+                "fur": "fluffy"
+            }},
+            { "tweet": {
+                "text": "What a fine day for JavaScript!",
+                "user": "@GrandCircusCo",
+                "created_at": "23 Feb 2016",
+                "length": 31
+            }},
+            {"blogPost": {
+                "title": "Hello World",
+                "topic": "Greeting",
+                "body": "Lorem Ipsum"
+            }}
+        ],
+        "arrays-of-objects": [
+            { "tweets": [
+                { "text": "Everything is Awesome!",
+                  "user": "@Emmet"},
+                { "text": "Welcome to tech",
+                  "user": "@GrandCircusCo"},
+                { "text": "Thanks.",
+                  "user": "@Obama"}
+            ] },
+            { "blogPosts": [
+                { "title": "Hello World",
+                  "author": "Earth"},
+                { "title": "Foo Bar Baz",
+                  "author": "Bits"}
+            ] },
+            { "kittens": [
+                { "name": "Peter",
+                  "age": 4},
+                { "name": "Paul",
+                  "age": 5},
+                { "name": "Mary",
+                  "age": 3}
+            ] }
+        ]
+    }
+}

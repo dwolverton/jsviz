@@ -1,7 +1,6 @@
 (function(){
 var app = angular.module("jsVizPractice", ["jsViz"]);
 app.controller("main", function($scope, $interval, $rootScope, jsvizSync, problemSetService, configService) {
-    window.cs = configService;
     $scope.variables = {};
     $scope.isSolved = isSolved;
     $scope.showInstructions = orDefault(localStorage.jvizShowInstructions, "true") === "true";
@@ -29,7 +28,12 @@ app.controller("main", function($scope, $interval, $rootScope, jsvizSync, proble
     function nextProblem() {
         var next = problemSetService.getNextProblem();
         syncer.clear();
-        $scope.goalVariables = next;
+        $scope.goalVariables = next.goal;
+        if (next.initial) {
+            _.forOwn(next.initial, function(value, key) {
+                window[key] = _.cloneDeep(value);
+            });
+        }
     }
 
     function isSolved() {
@@ -65,7 +69,14 @@ app.factory("problemSetService", function($http) {
                 var included = includeAllSets || _.includes(setIds, setId);
                 availableSets[setId] = included;
                 if (included) {
-                    practiceProblems = practiceProblems.concat(set);
+                    set.forEach(function(goal) {
+                        var pair = {
+                            goal: goal,
+                            initial: goal["^"]
+                        }
+                        delete goal["^"];
+                        practiceProblems.push(pair);
+                    });
                 }
             });
             return practiceProblems;

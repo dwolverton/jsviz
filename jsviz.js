@@ -166,6 +166,8 @@ app.service("jsvizSync", function() {
             // Batarang Noise
             blacklist.push("MODULE_NAME");
             blacklist.push("SEVERITY_WARNING");
+            // Noise
+            blacklist.push("prop");
         }
 
         return {
