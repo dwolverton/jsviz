@@ -1,4 +1,5 @@
-html {
+.key-value {
+    /* Everything is within top-level key-value classed elements */
     font-family: monospace;
 }
 
