@@ -16,11 +16,11 @@ variables in the console.
 
 Options:
 #### sourceUrl
-https://dwolverton.github.io/jsviz/practice.html#/?sourceUrl=practice-with-starter.json
+https://dwolverton.github.io/jsviz/practice.html#/?sourceUrl=practice-with-start.json
 
 Choose the challenges for the game.
 
-#### setIds
-https://dwolverton.github.io/jsviz/practice.html#/?setIds=arrays,objects
+#### sets
+https://dwolverton.github.io/jsviz/practice.html#/?sets=arrays,objects
 
 Challenges come in named sets. Limit to only challenges in one or more sets.

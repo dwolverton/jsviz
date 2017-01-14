@@ -36,6 +36,24 @@
             overflow: auto;
             font-size: 150%;
         }
+        .instructions .object, .instructions .array {
+            padding: 1px 8px;
+            background: white;
+        }
+        #instructions-button {
+            color: rgb(64,64,64);
+            text-decoration: none;
+
+            background-color: rgb(240, 240, 240);
+            border: 1px solid rgb(190,190,190);
+            border-radius: 50%;
+            box-shadow: 1px 1px 2px rgb(190,190,190);
+            padding: 1px 4px;
+
+            position: fixed;
+            top: .2em;
+            right: .2em;
+        }
         .lightbox button {
             background-color: white;
             border-radius: 4px;
@@ -68,11 +86,13 @@
         You got it!
         <button class="action" ng-click="next()">Next Challenge</button>
     </div>
+    <a href id="instructions-button" ng-click="toggleInstructions()" ng-if="!showInstructions">?</a>
     <div class="instructions lightbox ng-cloak" ng-if="showInstructions">
         <p>
             Open the JavaScript console. Define variables and values to make the
-            Workspace on the left match the Goal state on the right. The red
-            rectangles are arrays and the black rounded boxes are objects.
+            Workspace on the left match the Goal state on the right. The
+            <span class="array">red rectangles</span> are arrays and the
+            <span class="object">black rounded boxes</span> are objects.
         </p>
         <p>
             It's okay to have extra variables in the workspace, as long as you

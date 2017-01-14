@@ -29,8 +29,8 @@ app.controller("main", function($scope, $interval, $rootScope, jsvizSync, proble
         var next = problemSetService.getNextProblem();
         syncer.clear();
         $scope.goalVariables = next.goal;
-        if (next.initial) {
-            _.forOwn(next.initial, function(value, key) {
+        if (next.start) {
+            _.forOwn(next.start, function(value, key) {
                 window[key] = _.cloneDeep(value);
             });
         }
@@ -69,14 +69,7 @@ app.factory("problemSetService", function($http) {
                 var included = includeAllSets || _.includes(setIds, setId);
                 availableSets[setId] = included;
                 if (included) {
-                    set.forEach(function(goal) {
-                        var pair = {
-                            goal: goal,
-                            initial: goal["^"]
-                        }
-                        delete goal["^"];
-                        practiceProblems.push(pair);
-                    });
+                    practiceProblems = practiceProblems.concat(set);
                 }
             });
             return practiceProblems;
@@ -107,7 +100,7 @@ app.factory("configService", function($location) {
     var config = {};
 
     function loadFromUrl() {
-        set("setIds", parseArray($location.search().setIds), []);
+        set("setIds", parseArray($location.search().sets), []);
         set("sourceUrl", $location.search().sourceUrl, "practice.json");
     }
 

@@ -10,10 +10,21 @@
             { "goal": { "age": 92 }}
         ],
         "arrays": [
-            { "goal": { "numbers": [1, 2, 3] }},
-            { "goal": { "letters": ["a", "b", "c"] }},
-            { "goal": { "weekend": [true, false, false, false, false, false, true]}},
-            { "goal": { "colors": ["red", "orange", "yellow", "green", "blue", "violet"]}}
+            {  "start": { "numbers": [0, 1, 2, 3] },
+                "goal": { "numbers": [1, 2, 3] }
+            },
+            {  "start": { "letters": ["a", "b"] },
+                "goal": { "letters": ["a", "b", "c"] }
+            },
+            {  "start": { "weekend": [false, false, false, false, false, false, false] },
+                "goal": { "weekend": [true, false, false, false, false, false, true] }
+            },
+            {  "start": { "colors": ["orange", "lemon", "green"] },
+                "goal": { "colors": ["red", "orange", "yellow", "green", "blue", "violet"] }
+            },
+            {  "start": { "numbers": [1, 2, 3, 4] },
+                "goal": { "numbers": [2, 4, 6, 8] }
+            }
         ],
         "objects": [
             { "goal": { "hotel": {
