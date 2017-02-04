@@ -27,24 +27,39 @@
             }
         ],
         "objects": [
-            { "goal": { "hotel": {
+            { "start": { "hotel": {
+                "rooms": 212,
+                "availableRooms": 100
+              }},
+              "goal": { "hotel": {
                 "rooms": 212,
                 "availableRooms": 90,
                 "hasPool": true,
                 "name": "JavaScript Hotel"
             }}},
-            { "goal": { "cat": {
+            { "start": { "cat": {
+                "fur": "soft"
+              }},
+              "goal": { "cat": {
                 "legs": 4,
                 "tail": "curly",
                 "fur": "fluffy"
             }}},
-            { "goal": { "tweet": {
+            { "start": { "tweet": {
+                "text": "What a fine day for JavaScript",
+                "created_at": "23 Feb 2016",
+                "length": 30
+              }},
+              "goal": { "tweet": {
                 "text": "What a fine day for JavaScript!",
                 "user": "@GrandCircusCo",
                 "created_at": "23 Feb 2016",
                 "length": 31
             }}},
-            { "goal": {"blogPost": {
+            { "start": { "blogPost": {
+                "title": "Hello World"
+              }},
+              "goal": { "blogPost": {
                 "title": "Hello World",
                 "topic": "Greeting",
                 "body": "Lorem Ipsum"

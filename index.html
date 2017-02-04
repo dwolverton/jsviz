@@ -7,6 +7,11 @@
 <body ng-app="jsVizScratch">
     <section id="viz" ng-controller="main">
         <div jsviz="" variables="variables"></div>
+        <div ng-show="variables | isEmpty">
+            <h2>Welcome to JS Visualizer</h2>
+            <p>Open the Developer Tools Console and start creating some variables.</p>
+            <p>There's also a <a href="apps/practice/">practice game</a>.</p>
+        </div>
     </section>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.9/angular.min.js"></script>
     <script src="jsviz.js"></script>

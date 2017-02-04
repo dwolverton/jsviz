@@ -5,11 +5,13 @@ app.controller("main", function($scope, $interval, $rootScope, jsvizSync, proble
     $scope.isSolved = isSolved;
     $scope.showInstructions = orDefault(localStorage.jvizShowInstructions, "true") === "true";
     $scope.next = window.next = nextProblem;
+    $scope.reset = window.reset = reset;
     $scope.toggleInstructions = function() {
         $scope.showInstructions = !$scope.showInstructions;
         localStorage.jvizShowInstructions = $scope.showInstructions;
     }
     window.goal = function() {
+        // Log the goal to the console.
         _.forOwn($scope.goalVariables, function(value, key) {
             console.log(key + " =", value);
         });
@@ -26,11 +28,16 @@ app.controller("main", function($scope, $interval, $rootScope, jsvizSync, proble
     });
 
     function nextProblem() {
-        var next = problemSetService.getNextProblem();
+        problemSetService.getNextProblem();
+        reset();
+    }
+
+    function reset() {
+        var problem = problemSetService.getCurrentProblem();
         syncer.clear();
-        $scope.goalVariables = next.goal;
-        if (next.start) {
-            _.forOwn(next.start, function(value, key) {
+        $scope.goalVariables = problem.goal;
+        if (problem.start) {
+            _.forOwn(problem.start, function(value, key) {
                 window[key] = _.cloneDeep(value);
             });
         }
@@ -79,18 +86,24 @@ app.factory("problemSetService", function($http) {
         });
     }
 
+    function getCurrentProblem() {
+        return fullSet[currentProblemIndex];
+    }
+
     function getNextProblem() {
+        currentProblemIndex++;
         if (currentProblemIndex >= fullSet.length) {
             currentProblemIndex = 0;
             if (randomOrder) {
                 fullSet = _.shuffle(fullSet);
             }
         }
-        return fullSet[currentProblemIndex++];
+        return getCurrentProblem();
     }
 
     return {
         loadDataSets: loadDataSets,
+        getCurrentProblem: getCurrentProblem,
         getNextProblem: getNextProblem
     }
 });

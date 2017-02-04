@@ -5,4 +5,9 @@ app.controller("main", function($scope, $interval, jsvizSync) {
     var syncer = jsvizSync.buildSyncFunction(window, $scope.variables);
     $interval(syncer.sync, 300);
 });
+app.filter('isEmpty', function () {
+        return function (obj) {
+            return !obj || Object.keys(obj).length === 0;
+        };
+    });
 }());

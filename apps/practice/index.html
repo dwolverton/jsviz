@@ -18,8 +18,9 @@
         <jsviz variables="goalVariables"/>
     </section>
     <div class="message lightbox ng-cloak" ng-if="isSolved()">
-        You got it!
+        You got it!<br/><br/>
         <button class="action" ng-click="next()">Next Challenge</button>
+        <button class="action" ng-click="reset()">Try it Again</button>
     </div>
     <a href id="instructions-button" ng-click="toggleInstructions()" ng-if="!showInstructions">?</a>
     <div class="instructions lightbox ng-cloak" ng-if="showInstructions">
@@ -37,7 +38,9 @@
             goal() - call this function to print out the goal variables to the
                      console.<br/>
             next() - calling this function is the same as clicking the "Next
-                     Challenge" button.
+                     Challenge" button.<br/>
+            reset() - call this funciton to start the current practice problem
+                      again.
         </p>
         <p class="action-bar">
             <button class="action" ng-click="toggleInstructions()">Dismiss</button>
