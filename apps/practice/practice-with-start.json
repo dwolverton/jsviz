@@ -1,14 +1,6 @@
 {
     "randomOrder": true,
     "problemSets": {
-        "variables": [
-            { "goal": { "x": 7, "y": 2 }},
-            { "goal": { "color": "red" }},
-            { "goal": { "color": "brown", "scent": "earthy" }},
-            { "goal": { "height": 4.7 }},
-            { "goal": { "isNight": false, "isDay": true }},
-            { "goal": { "age": 92 }}
-        ],
         "arrays": [
             {  "start": { "numbers": [0, 1, 2, 3] },
                 "goal": { "numbers": [1, 2, 3] }
@@ -64,30 +56,6 @@
                 "topic": "Greeting",
                 "body": "Lorem Ipsum"
             }}}
-        ],
-        "arrays-of-objects": [
-            { "goal": { "tweets": [
-                { "text": "Everything is Awesome!",
-                  "user": "@Emmet"},
-                { "text": "Welcome to tech",
-                  "user": "@GrandCircusCo"},
-                { "text": "Thanks.",
-                  "user": "@Obama"}
-            ] }},
-            { "goal": { "blogPosts": [
-                { "title": "Hello World",
-                  "author": "Earth"},
-                { "title": "Foo Bar Baz",
-                  "author": "Bits"}
-            ] }},
-            { "goal": { "kittens": [
-                { "name": "Peter",
-                  "age": 4},
-                { "name": "Paul",
-                  "age": 5},
-                { "name": "Mary",
-                  "age": 3}
-            ] }}
         ]
     }
 }

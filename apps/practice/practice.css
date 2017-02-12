@@ -1,6 +1,44 @@
-html {
+html, body {
     font-family: monospace;
+    margin: 0;
+    padding: 0;
 }
+
+.info-bar {
+    color: rgb(64,64,64);
+    text-decoration: none;
+
+    background-color: rgb(240, 240, 240);
+    border-bottom: 1px solid rgb(190,190,190);
+    box-shadow: 1px 1px 2px rgb(190,190,190);
+    padding: 1px 4px;
+}
+
+.info-bar .progress {
+    position: absolute;
+    top: 2px;
+    right: 2.5em;
+}
+
+#instructions-button {
+    color: rgb(64,64,64);
+    text-decoration: none;
+
+    background-color: white;
+    border: 1px solid rgb(190,190,190);
+    border-radius: 50%;
+    box-shadow: 1px 1px 2px rgb(190,190,190);
+    padding: 1px 4px;
+
+    position: absolute;
+    top: 1px;
+    right: .2em;
+}
+
+.wrapper {
+    margin: 0 .7em .7em;
+}
+
 .workspace {
     float: left;
     width: 50%;
@@ -36,20 +74,6 @@ html {
 .instructions .object, .instructions .array {
     padding: 1px 8px;
     background: white;
-}
-#instructions-button {
-    color: rgb(64,64,64);
-    text-decoration: none;
-
-    background-color: rgb(240, 240, 240);
-    border: 1px solid rgb(190,190,190);
-    border-radius: 50%;
-    box-shadow: 1px 1px 2px rgb(190,190,190);
-    padding: 1px 4px;
-
-    position: fixed;
-    top: .2em;
-    right: .2em;
 }
 .lightbox button {
     background-color: white;
