@@ -51,8 +51,6 @@ app.controller("main", function($scope, $interval, jsvizSync, problemSetService)
 });
 
 app.controller("infoBar", function($scope, problemSetService, setsSource, configService) {
-    window.cs = configService;
-
     $scope.problemSetService = problemSetService;
     $scope.config = configService.config;
     $scope.setsSource = setsSource;
@@ -170,7 +168,6 @@ app.factory("setsSource", function($rootScope, $http, configService) {
     }
 
     function setSourceUrl(newSourceUrl) {
-        console.log("a", newSourceUrl);
         if (newSourceUrl !== sourceUrl) {
             sourceUrl = newSourceUrl;
             if (sourceUrl) {
