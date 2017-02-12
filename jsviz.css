@@ -28,6 +28,10 @@
     white-space: pre;
 }
 
+.html-element {
+    color: #881280;
+}
+
 .array {
     display: inline-block;
     border: 2px solid red;

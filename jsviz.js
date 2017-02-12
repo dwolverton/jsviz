@@ -1,14 +1,19 @@
 (function(){
 var app = angular.module("jsViz", []);
 var DELETED = { deleted: "DELETED" };
+var ELEMENT_PREFIX = "$$ELEMENT$$";
+
 app.directive("jsviz", function() {
     return {
         scope: {
             variables: "="
         },
+        controller: function($scope) {
+            $scope.sanitize = sanitize;
+        },
         template: '<div class="key-value" ng-repeat="(key, value) in variables">' +
             '<div class="key" title="Variable Name">{{key}}</div> ' +
-            '<jsviz-value value="value">' +
+            '<jsviz-value value="sanitize(variables, key)">' +
         '</div>'
     }
 });
@@ -18,6 +23,9 @@ app.directive("jsvizValue", function() {
             return 'depth-exceeded';
         }
         var type = typeof value;
+        if (type === 'string' && value.startsWith(ELEMENT_PREFIX)) {
+            return 'element';
+        }
         if (type === 'string' || type === 'number' || type === 'boolean' || type === 'function') {
             return type;
         } else if (!value) {
@@ -52,6 +60,7 @@ app.directive("jsvizValue", function() {
             $scope.type = type;
             $scope.empty = empty;
             $scope.increment = increment;
+            $scope.sanitize = sanitize;
         },
         replace: true,
         template: '<div class="value"><jsviz-string ng-if="type(value, depth) === \'string\'"/>' +
@@ -59,6 +68,7 @@ app.directive("jsvizValue", function() {
                   '<jsviz-boolean ng-if="type(value, depth) === \'boolean\'"/>' +
                   '<jsviz-object ng-if="type(value, depth) === \'object\'"/>' +
                   '<jsviz-function ng-if="type(value, depth) === \'function\'"/>' +
+                  '<jsviz-element ng-if="type(value, depth) === \'element\'"/>' +
                   '<jsviz-array ng-if="type(value, depth) === \'array\'"/>' +
                   '<span class="null" ng-if="type(value, depth) === \'null\'">{{value === null ? "null" : "undefined"}}</span>' +
                   '<span class="depth-exceeded" ng-if="type(value, depth) === \'depth-exceeded\'">&lt;max depth&gt;</span></div>'
@@ -89,7 +99,7 @@ app.directive("jsvizArray", function() {
             '<span class="empty" ng-if="empty(value)">&lt;Empty Array&gt;</span>' +
             '<div class="element" ng-repeat="el in value track by $index">' +
                 '<div class="index" title="Array Index: {{$index}}">{{$index}}</div> ' +
-                '<jsviz-value value="el" depth="{{increment(depth)}}"/>' +
+                '<jsviz-value value="sanitize(value, $index)" depth="{{increment(depth)}}"/>' +
             '</div></div>'
     };
 });
@@ -98,9 +108,9 @@ app.directive("jsvizObject", function() {
         replace: true,
         template: '<div class="object" title="Type: Object">' +
             '<span class="empty" ng-if="empty(value)">&lt;Empty Object&gt;</span>' +
-            '<div class="key-value" ng-repeat="(key,val) in value track by $index">' +
+            '<div class="key-value" ng-repeat="(key,val) in value">' +
                 '<div class="key" title="Property Name (aka: key)">{{key}}</div> ' +
-                '<jsviz-value value="val" depth="{{increment(depth)}}"/>' +
+                '<jsviz-value value="sanitize(value, key)" depth="{{increment(depth)}}"/>' +
             '</div></div>'
     };
 });
@@ -110,6 +120,30 @@ app.directive("jsvizFunction", function() {
         template: '<div class="function" title="Type: Function">{{value.toString()}}</div>'
     };
 });
+app.directive("jsvizElement", function() {
+    return {
+        replace: true,
+        template: '<div class="html-element" title="Type: HTML Element">{{value.substring(11)}}</div>'
+    };
+});
+
+function stringifyElement(el) {
+    var str = el.outerHTML;
+    if (str.length > 100) {
+        str = str.substring(0, 90) + "..." + str.substring(str.length - 10);
+    }
+    return str;
+}
+
+// Angular can't pass HTML elements so we have to sanitize them.
+function sanitize(obj, key) {
+    var val = obj[key];
+    if (val instanceof Element) {
+        return ELEMENT_PREFIX + stringifyElement(val);
+    } else {
+        return val;
+    }
+}
 
 app.service("jsvizSync", function() {
     /**
